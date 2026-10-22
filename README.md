@@ -37,6 +37,7 @@ default-workspace/
 ├── api_client.py        # 核心：HTTP 调用、Bearer 鉴权、超时、重试、SSE 流式解析、token 用量
 ├── main.py              # 命令行入口：--mock / --stream / --system
 ├── setup_key.py         # 交互式填 Key：粘贴 → 校验 → 真实试调 → 写入 .env
+├── setup_key.cmd        # 双击版 setup_key.py（不想开终端就用它）
 ├── batch.py             # 批量跑模型：提示词文件 -> JSONL（用量/耗时/费用，可续跑）
 ├── compare.py           # 多模型对比：同一提示词跑多个模型，输出对比表
 ├── doctor.py            # 环境体检：Key / 接口 / 连通性 / 真实调用
@@ -73,6 +74,8 @@ run.cmd --mock "你好"
 python setup_key.py
 # 回车后粘贴 Key（不显示），脚本会自动发一条最短请求验证，通过后写进 .env
 ```
+
+不想开终端的话，直接**双击 `setup_key.cmd`**，效果一样（会弹出黑窗口让你粘贴 Key）。
 
 也可以手动改 `.env`（只改一行）：
 
