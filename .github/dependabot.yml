@@ -1,0 +1,23 @@
+# Dependabot：自动帮你升级 GitHub Actions 版本（这个项目没有 Python 第三方依赖，
+# 以后如果加了 requirements.txt / pyproject.toml，把下面注释掉的那段打开即可）。
+version: 2
+
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:00"
+      timezone: "Asia/Shanghai"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci"
+
+  # - package-ecosystem: "pip"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+  #   open-pull-requests-limit: 5
+  #   commit-message:
+  #     prefix: "deps"

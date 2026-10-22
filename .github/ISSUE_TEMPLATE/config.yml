@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: DeepSeek 官方文档
+    url: https://api-docs.deepseek.com/zh-cn/
+    about: 模型名称、接口格式、价格与限流说明
+  - name: DeepSeek 开放平台
+    url: https://platform.deepseek.com/api_keys
+    about: 申请 / 管理 API Key

@@ -1,0 +1,36 @@
+name: 功能建议
+description: 希望这个项目多做点什么
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        说说你想解决什么问题，比只描述方案更有用。
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 你想解决什么问题
+      description: 现在的用法哪里不顺手？
+      placeholder: 我想一次跑几百条提示词，但现在只能一条条手动调。
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 你希望怎么用
+      description: 如果已经想好方案，可以写出来
+      placeholder: 希望有个命令能读取 prompts.txt，把结果存成 JSONL。
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: 适用范围
+      options:
+        - label: 与 DeepSeek / OpenAI 兼容接口调用有关
+        - label: 与批量运行 / 成本统计有关
+        - label: 与文档、示例有关

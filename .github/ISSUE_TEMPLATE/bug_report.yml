@@ -1,0 +1,49 @@
+name: Bug 报告
+description: 报告一个可以稳定复现的问题
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈！请尽量把复现步骤写清楚，方便快速定位。
+        如果是 API 调用失败，请贴出报错文本（**不要贴真实 API Key**）。
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 发生了什么
+      description: 你期望的结果 vs 实际看到的结果
+      placeholder: 运行 `python main.py "你好"` 后报 HTTP 401，但我已经在 .env 里填了 Key。
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      description: 按顺序列出你执行的命令
+      placeholder: |
+        1. 打开 .env，填入 OPENAI_API_KEY
+        2. 运行 python doctor.py
+        3. 看到 ...
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: 运行环境
+      description: Python 版本 + 操作系统
+      placeholder: Python 3.12.14 / Windows 11
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 报错日志
+      description: 直接粘贴终端输出（已自动按代码块显示）
+      render: shell
+    validations:
+      required: false

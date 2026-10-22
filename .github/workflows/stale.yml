@@ -1,0 +1,29 @@
+name: Stale
+
+# 长期没动静的 issue / PR 自动打个标记，再过一阵子自动关闭，保持仓库清爽
+on:
+  schedule:
+    - cron: "30 1 * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    name: Mark and close stale issues/PRs
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Stale
+        uses: actions/stale@v11
+        with:
+          days-before-stale: 90
+          days-before-close: 30
+          stale-issue-message: "这个 issue 已经 90 天没有新进展，先标记为 stale；补充信息后会自动取消标记。"
+          stale-pr-message: "这个 PR 已经 90 天没有新进展，先标记为 stale；补充信息后会自动取消标记。"
+          close-issue-message: "30 天没有新进展，先关闭；需要时随时重开。"
+          close-pr-message: "30 天没有新进展，先关闭；需要时随时重开。"
+          exempt-issue-labels: "pinned,security"
+          exempt-pr-labels: "pinned,security"
