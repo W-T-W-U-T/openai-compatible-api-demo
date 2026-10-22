@@ -180,6 +180,7 @@ def main(argv: list[str] | None = None) -> int:
     section("结论与下一步")
     if not key_ok:
         print("  还差一步：打开 .env，把 OPENAI_API_KEY 换成真实 Key")
+        print("  最省事的方式：python setup_key.py（粘贴 Key，自动验证并写入）")
         print("  申请地址：https://platform.deepseek.com/api_keys")
         print("  填完再跑：python doctor.py --live")
         return 2

@@ -8,6 +8,7 @@ DeepSeek、OpenAI、通义千问、Kimi、本地 Ollama 都能用同一份代码
 
 | 工具 | 用途 |
 | --- | --- |
+| `setup_key.py` | 交互式填 API Key：粘贴一次，自动验证并写入 `.env` |
 | `batch.py` | 提示词文件整批跑，记录 token / 耗时 / 费用，支持断点续跑 |
 | `compare.py` | 同一提示词横向对比多个模型，看谁快、谁便宜、谁答得好 |
 | `doctor.py` | 一键体检：Python / Key / 接口连通性 / 可选真实调用 |
@@ -35,6 +36,7 @@ python.org 免安装版（embeddable）虽免权限，但它的 `._pth` 会锁�
 default-workspace/
 ├── api_client.py        # 核心：HTTP 调用、Bearer 鉴权、超时、重试、SSE 流式解析、token 用量
 ├── main.py              # 命令行入口：--mock / --stream / --system
+├── setup_key.py         # 交互式填 Key：粘贴 → 校验 → 真实试调 → 写入 .env
 ├── batch.py             # 批量跑模型：提示词文件 -> JSONL（用量/耗时/费用，可续跑）
 ├── compare.py           # 多模型对比：同一提示词跑多个模型，输出对比表
 ├── doctor.py            # 环境体检：Key / 接口 / 连通性 / 真实调用
@@ -65,16 +67,24 @@ run.cmd --mock "你好"
 
 ## 2. 接真实 API（只差一个 Key）
 
-`.env` 已经生成好了，只剩填 Key 这一件事：
+`.env` 已经生成好了，只剩填 Key 这一件事。最省事的做法是跑一次脚本，把 Key 粘进去：
 
 ```powershell
-# 第 1 步：打开 .env（记事本）
+python setup_key.py
+# 回车后粘贴 Key（不显示），脚本会自动发一条最短请求验证，通过后写进 .env
+```
+
+也可以手动改 `.env`（只改一行）：
+
+```powershell
 notepad .env
+# 把 OPENAI_API_KEY=sk-在这里替换成你的真实Key
+# 换成你在 https://platform.deepseek.com/api_keys 申请的 Key
+```
 
-# 第 2 步：把这一行换成你在 https://platform.deepseek.com/api_keys 申请的 Key
-#         OPENAI_API_KEY=sk-在这里替换成你的真实Key
+填好后先体检，再运行：
 
-# 第 3 步：先体检，再运行
+```powershell
 python doctor.py            # 看 Key / 网络是否就绪
 python doctor.py --live     # 真发一条最短请求（几分钱），确认能扣费、能出结果
 run.cmd "用一句话介绍 Python"
