@@ -20,7 +20,7 @@ import time
 import urllib.error
 import urllib.request
 from contextlib import closing
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Iterator
 
 DEFAULT_BASE_URL = "https://api.deepseek.com"
@@ -68,6 +68,28 @@ def _friendly_message(status: int | None, body: str) -> str:
 
 
 @dataclass
+class ChatResult:
+    """一条完整的非流式回复，附带用量和耗时，批量跑的时候用来记账。"""
+
+    content: str
+    usage: dict
+    model: str
+    latency_ms: float
+
+    @property
+    def prompt_tokens(self) -> int:
+        return int(self.usage.get("prompt_tokens") or 0)
+
+    @property
+    def completion_tokens(self) -> int:
+        return int(self.usage.get("completion_tokens") or 0)
+
+    @property
+    def total_tokens(self) -> int:
+        return int(self.usage.get("total_tokens") or 0)
+
+
+@dataclass
 class ChatClient:
     api_key: str
     base_url: str = DEFAULT_BASE_URL
@@ -105,14 +127,35 @@ class ChatClient:
         max_tokens: int | None = None,
     ) -> str:
         """一次性返回完整回复文本。"""
+        return self.chat_with_usage(
+            messages, temperature=temperature, max_tokens=max_tokens
+        ).content
+
+    def chat_with_usage(
+        self,
+        messages: list[dict],
+        *,
+        temperature: float = 0.7,
+        max_tokens: int | None = None,
+    ) -> ChatResult:
+        """一次性返回完整回复 + token 用量 + 耗时（做批量评估/成本核算用）。"""
         payload = self._payload(messages, temperature, max_tokens, stream=False)
+        started = time.perf_counter()
         with closing(self._post_with_retries(payload)) as resp:
             raw = resp.read().decode("utf-8", errors="replace")
+        latency_ms = (time.perf_counter() - started) * 1000.0
         try:
             data = json.loads(raw)
-            return data["choices"][0]["message"]["content"] or ""
+            content = data["choices"][0]["message"]["content"] or ""
         except (ValueError, KeyError, IndexError, TypeError):
             raise ApiError(f"响应格式不符合预期：{raw[:500]}") from None
+        usage = data.get("usage") if isinstance(data.get("usage"), dict) else {}
+        return ChatResult(
+            content=content,
+            usage=usage,
+            model=str(data.get("model") or self.model),
+            latency_ms=latency_ms,
+        )
 
     def chat_stream(
         self,

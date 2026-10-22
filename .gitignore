@@ -7,3 +7,6 @@ __pycache__/
 .venv/
 venv/
 .pytest_cache/
+
+# 批量跑模型的结果（可能很大，也可能含你的私有数据）
+results/

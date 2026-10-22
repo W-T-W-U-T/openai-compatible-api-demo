@@ -47,6 +47,16 @@ class _Handler(BaseHTTPRequestHandler):
 
     # ---- 路由 ----
 
+    def do_GET(self):  # noqa: N802
+        """GET /models：给 doctor.py 做「接口是否可达」体检用。"""
+        if self.path.rstrip("/").endswith("/models"):
+            self._json(
+                200,
+                {"object": "list", "data": [{"id": "mock-model", "object": "model"}]},
+            )
+            return
+        self._json(404, {"error": {"message": "not found"}})
+
     def do_POST(self):  # noqa: N802
         cfg: "MockServer" = self.server.cfg  # type: ignore[attr-defined]
         length = int(self.headers.get("Content-Length") or 0)

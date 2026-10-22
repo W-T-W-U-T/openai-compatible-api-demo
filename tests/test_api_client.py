@@ -57,6 +57,19 @@ class ChatClientTest(unittest.TestCase):
         self.assertIn("mock", "".join(pieces))
         self.assertTrue(self.server.calls[0]["payload"]["stream"])
 
+    def test_chat_with_usage_returns_tokens_and_latency(self) -> None:
+        result = self.client().chat_with_usage(build_messages(None, "记账"))
+        self.assertIn("mock", result.content)
+        self.assertEqual(result.model, "mock-model")
+        self.assertEqual(result.prompt_tokens, 10)
+        self.assertEqual(result.completion_tokens, 20)
+        self.assertEqual(result.total_tokens, 30)
+        self.assertGreater(result.latency_ms, 0)
+        # chat() 仍然只返回文本，保持旧行为
+        text = self.client().chat(build_messages(None, "旧接口"))
+        self.assertIsInstance(text, str)
+        self.assertIn("mock", text)
+
     # ---- 失败路径 ----
 
     def test_bad_key_raises_401_without_retry(self) -> None:
